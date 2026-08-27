@@ -14,7 +14,7 @@ namespace HowToFishMorePlayers
         public const string PluginGuid = "andrewpalww.howtofish.moreplayers";
         public const string PluginName = "How To Fish More Players";
         public const string PluginVersion = "2.1.1";
-        public const int TargetPlayers = 16;
+        public const int TargetPlayers = 32;
 
         private Harmony _harmony;
         private static BepInEx.Logging.ManualLogSource Log;
