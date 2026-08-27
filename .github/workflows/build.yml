@@ -1,1 +1,44 @@
+name: Build How To Fish More Players
 
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'src/**'
+      - 'lib/**'
+      - 'HowToFishMorePlayers.csproj'
+      - '.github/workflows/build.yml'
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore
+        run: dotnet restore HowToFishMorePlayers.csproj
+
+      - name: Build Release
+        run: dotnet build HowToFishMorePlayers.csproj -c Release --no-restore
+
+      - name: Verify DLL exists
+        shell: pwsh
+        run: |
+          $dll = "bin/Release/net472/HowToFishMorePlayers.dll"
+          if (!(Test-Path $dll)) { throw "DLL was not produced: $dll" }
+          Write-Host "Built: $dll"
+          Get-Item $dll | Format-List Name,Length,LastWriteTime
+
+      - name: Upload plugin artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: HowToFishMorePlayers-v2.1.1-16Players
+          path: bin/Release/net472/HowToFishMorePlayers.dll
+          if-no-files-found: error
